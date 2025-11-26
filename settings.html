@@ -399,7 +399,7 @@
         // Encryption/Decryption utilities using Web Crypto API
         async function getEncryptionKey() {
             // Generate a key from user's session token + a fixed salt
-            const salt = 'TikTok_API_Encryption_Salt_2024';
+            const salt = 'TikTok_API_Encryption_Salt_2025';
             const token = sessionStorage.getItem('security_token') || 'default';
             const keyMaterial = await crypto.subtle.importKey(
                 'raw',
