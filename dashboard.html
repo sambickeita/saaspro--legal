@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Product Management | SaaS Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        .header {
+            background: white;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #667eea;
+        }
+        .nav-link.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+        .main {
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .product-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .product-image-placeholder {
+            color: #94a3b8;
+            font-size: 48px;
+        }
+        .image-delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(220, 38, 38, 0.9);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.2s ease;
+            opacity: 0;
+        }
+        .product-image:hover .image-delete-btn {
+            opacity: 1;
+        }
+        .image-delete-btn:hover {
+            background: rgba(220, 38, 38, 1);
+            transform: scale(1.1);
+        }
+        .product-info {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .product-description {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+            flex: 1;
+        }
+        .product-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 16px;
+        }
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-send {
+            flex: 1;
+            background: #000;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-send:hover {
+            background: #1a1a1a;
+        }
+        .btn-send:disabled {
+            background: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .btn-delete {
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-delete:hover {
+            background: #fecaca;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            background: white;
+            border-radius: 16px;
+            grid-column: 1 / -1;
+        }
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        .empty-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .empty-subtext {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+        
+        /* Modal Add Product */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            animation: modalIn 0.3s ease;
+        }
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+        .modal-header {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a2e;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-input[type="file"] {
+            padding: 12px;
+            cursor: pointer;
+        }
+        .form-input[type="file"]::file-selector-button {
+            background: #f1f5f9;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            margin-right: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: #334155;
+            transition: all 0.2s ease;
+        }
+        .form-input[type="file"]::file-selector-button:hover {
+            background: #e2e8f0;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .btn-cancel {
+            flex: 1;
+            background: #f1f5f9;
+            color: #64748b;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        
+        /* Toast & Loading */
+        .toast {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #10b981;
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: toastIn 0.4s ease;
+        }
+        .toast.show {
+            display: flex;
+        }
+        .toast.error {
+            background: #dc2626;
+        }
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+        .loading-overlay.active {
+            display: flex;
+        }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .api-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 16px;
+        }
+        .api-status.configured {
+            background: #ecfdf5;
+            color: #059669;
+        }
+        .api-status.not-configured {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        .image-preview-container {
+            margin-top: 12px;
+            display: none;
+        }
+        .image-preview-container.show {
+            display: block;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+        .btn-remove-image {
+            margin-top: 8px;
+            padding: 6px 12px;
+            background: #fee2e2;
+            color: #dc2626;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.2s ease;
+        }
+        .btn-remove-image:hover {
+            background: #fecaca;
+        }
+        .form-help-text {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">SaaS Pro</div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link active">Dashboard</a>
+            <a href="settings.html" class="nav-link">Settings</a>
+            <a href="index.html" class="nav-link" onclick="logout()">Logout</a>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main">
+        <div class="page-header">
+            <div>
+                <h1 class="section-title">
+                    Product Management
+                    <span class="api-status" id="apiStatus"></span>
+                </h1>
+            </div>
+            <button class="btn-primary" onclick="openAddProductModal()">
+                <span>+</span> Add Product
+            </button>
+        </div>
+        
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be inserted here -->
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal-overlay" id="addProductModal">
+        <div class="modal">
+            <h2 class="modal-header">Add New Product</h2>
+            <form id="addProductForm">
+                <div class="form-group">
+                    <label class="form-label" for="productName">Product Name *</label>
+                    <input type="text" id="productName" class="form-input" placeholder="e.g., Aloe Vera Gel" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productDescription">Description *</label>
+                    <textarea id="productDescription" class="form-textarea" placeholder="Enter product description..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="productImage">Product Image</label>
+                    <input type="file" id="productImage" class="form-input" accept="image/*" onchange="handleImagePreview(event)">
+                    <div id="imagePreview" class="image-preview-container">
+                        <img id="previewImg" class="preview-image" alt="Product preview">
+                        <button type="button" onclick="clearImagePreview()" class="btn-remove-image">Remove Image</button>
+                    </div>
+                    <div class="form-help form-help-text">Upload an image for your product (JPG, PNG, etc.)</div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-cancel" onclick="closeAddProductModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Security Configuration (DOIT correspondre à index.html)
+        const SECURITY_CONFIG = {
+            UNIQUE_TOKEN: 'CHANGEZ_MOI_AVANT_DEPLOIEMENT_' + Date.now(),
+            MAX_USES: 1,
+            ENABLE_PROTECTION: true,
+            // Clés TikTok par défaut interdites (exemples)
+            FORBIDDEN_KEYS: ['demo_key', 'test_key', 'example_key', 'your_key_here'],
+            // Durée d'expiration en millisecondes (24 heures)
+            EXPIRATION_HOURS: 24,
+            EXPIRATION_MS: 24 * 60 * 60 * 1000
+        };
+        
+        // Utility functions for expiration management
+        function isExpired(expirationTimestamp) {
+            if (!expirationTimestamp) return true;
+            return Date.now() > expirationTimestamp;
+        }
+        
+        function getTimeUntilExpiration(expirationTimestamp) {
+            if (!expirationTimestamp) return null;
+            const remaining = expirationTimestamp - Date.now();
+            if (remaining <= 0) return null;
+            return remaining;
+        }
+        
+        function formatTimeRemaining(ms) {
+            if (!ms || ms <= 0) return 'Expiré';
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}m`;
+        }
+        
+        // Clean expired data
+        function cleanExpiredData() {
+            // Check session expiration
+            const sessionExpiration = sessionStorage.getItem('session_expiration');
+            if (sessionExpiration && isExpired(parseInt(sessionExpiration))) {
+                alert('⏰ Your session has expired. Please login again.');
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+                return true;
+            }
+            
+            // Check API keys expiration
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                // Remove expired API keys
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                console.log('🔒 Expired API keys removed');
+                return true;
+            }
+            return false;
+        }
+        
+        // Check authentication and expiration
+        cleanExpiredData();
+        
+        if (sessionStorage.getItem('user_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // Security check: Verify token
+        const storedToken = sessionStorage.getItem('security_token');
+        const usageCount = parseInt(localStorage.getItem('app_usage_count') || '0');
+        
+        if (SECURITY_CONFIG.ENABLE_PROTECTION) {
+            if (!storedToken) {
+                alert('⚠️ Security token missing. Please login again.');
+                window.location.href = 'index.html';
+            }
+            
+            if (usageCount >= SECURITY_CONFIG.MAX_USES) {
+                const warning = document.createElement('div');
+                warning.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: #fee2e2; color: #dc2626; padding: 16px; text-align: center; z-index: 10000; font-weight: 600;';
+                warning.innerHTML = '⚠️ This application has reached its maximum usage limit. Some features may be disabled.';
+                document.body.insertBefore(warning, document.body.firstChild);
+            }
+        }
+        
+        // Check and display expiration warnings
+        function checkExpirationWarnings() {
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration) {
+                const expiration = parseInt(keyExpiration);
+                if (!isExpired(expiration)) {
+                    const remaining = getTimeUntilExpiration(expiration);
+                    if (remaining) {
+                        const hoursRemaining = Math.floor(remaining / (1000 * 60 * 60));
+                        if (hoursRemaining < 2) {
+                            // Show warning banner
+                            const warning = document.createElement('div');
+                            warning.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; background: #fef3c7; color: #92400e; padding: 12px; text-align: center; z-index: 9999; font-weight: 600; font-size: 14px;';
+                            warning.innerHTML = `⏰ API Keys expiring soon: ${formatTimeRemaining(remaining)} remaining. They will be automatically removed after expiration.`;
+                            document.body.insertBefore(warning, document.body.firstChild);
+                            setTimeout(() => {
+                                warning.style.display = 'none';
+                            }, 10000);
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Products storage
+        let products = JSON.parse(localStorage.getItem('products') || '[]');
+        
+        // Encryption/Decryption utilities for API keys
+        async function getEncryptionKey() {
+            // Generate a key from user's session token + a fixed salt
+            const salt = 'TikTok_API_Encryption_Salt_2024';
+            const token = sessionStorage.getItem('security_token') || 'default';
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                new TextEncoder().encode(token + salt),
+                { name: 'PBKDF2' },
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+            
+            return await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: new TextEncoder().encode(salt),
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+        
+        async function encryptAPIKey(text) {
+            if (!text) return null;
+            try {
+                const key = await getEncryptionKey();
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const encoded = new TextEncoder().encode(text);
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encoded
+                );
+                // Store IV + encrypted data as base64
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv, 0);
+                combined.set(new Uint8Array(encrypted), iv.length);
+                return btoa(String.fromCharCode(...combined));
+            } catch (error) {
+                console.error('Encryption error:', error);
+                return null;
+            }
+        }
+        
+        async function decryptAPIKey(encryptedData) {
+            if (!encryptedData) return null;
+            try {
+                const key = await getEncryptionKey();
+                const combined = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
+                const iv = combined.slice(0, 12);
+                const encrypted = combined.slice(12);
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encrypted
+                );
+                return new TextDecoder().decode(decrypted);
+            } catch (error) {
+                console.error('Decryption error:', error);
+                return null;
+            }
+        }
+        
+        // Check API configuration with security validation
+        async function checkAPIConfig() {
+            const encryptedKey = sessionStorage.getItem('tiktok_client_key_encrypted');
+            const encryptedSecret = sessionStorage.getItem('tiktok_client_secret_encrypted');
+            const statusEl = document.getElementById('apiStatus');
+            
+            // Check expiration first
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                // Keys expired, remove them
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                statusEl.textContent = '⏰ API Keys Expired';
+                statusEl.className = 'api-status not-configured';
+                statusEl.title = 'Your API keys have expired. Please reconfigure them in Settings.';
+                return;
+            }
+            
+            if (encryptedKey && encryptedSecret) {
+                // Security: Check if keys are not default/forbidden
+                const clientKey = await decryptAPIKey(encryptedKey);
+                const isForbidden = SECURITY_CONFIG.FORBIDDEN_KEYS.some(key => 
+                    clientKey && (clientKey.toLowerCase().includes(key.toLowerCase()))
+                );
+                
+                if (isForbidden) {
+                    statusEl.textContent = '⚠ Invalid API Keys';
+                    statusEl.className = 'api-status not-configured';
+                    statusEl.title = 'Please use your own TikTok API credentials';
+                } else {
+                    // Show expiration info if available
+                    let statusText = '✓ API Configured';
+                    if (keyExpiration) {
+                        const remaining = getTimeUntilExpiration(parseInt(keyExpiration));
+                        if (remaining) {
+                            const hoursRemaining = Math.floor(remaining / (1000 * 60 * 60));
+                            if (hoursRemaining < 6) {
+                                statusText += ` (${formatTimeRemaining(remaining)} left)`;
+                            }
+                        }
+                    }
+                    statusEl.textContent = statusText;
+                    statusEl.className = 'api-status configured';
+                }
+            } else {
+                statusEl.textContent = '⚠ API Not Configured';
+                statusEl.className = 'api-status not-configured';
+            }
+        }
+        
+        // Render Products
+        function renderProducts() {
+            const grid = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📦</div>
+                        <div class="empty-text">No products yet</div>
+                        <div class="empty-subtext">Click "Add Product" to create your first product</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = products.map((product, index) => `
+                <div class="product-card">
+                    <div class="product-image">
+                        ${product.imageBase64 
+                            ? `<img src="${product.imageBase64}" alt="${product.name}">` 
+                            : `<div class="product-image-placeholder">📦</div>`
+                        }
+                        ${product.imageBase64 ? `
+                            <button class="image-delete-btn" onclick="deleteProductImage(${index})" title="Delete Image">×</button>
+                        ` : ''}
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-actions">
+                            <button class="btn-send" onclick="sendToTikTok(${index})" id="sendBtn-${index}">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .58.05.86.14V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 4 15.68a6.33 6.33 0 0 0 10.86 4.43V13.23a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                                </svg>
+                                Send to TikTok
+                            </button>
+                            <button class="btn-delete" onclick="deleteProduct(${index})" title="Delete Product">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Add Product Modal
+        function openAddProductModal() {
+            document.getElementById('addProductModal').classList.add('active');
+        }
+        
+        let currentImageBase64 = null;
+        
+        function closeAddProductModal() {
+            document.getElementById('addProductModal').classList.remove('active');
+            document.getElementById('addProductForm').reset();
+            clearImagePreview();
+            currentImageBase64 = null;
+        }
+        
+        function handleImagePreview(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                clearImagePreview();
+                return;
+            }
+            
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select an image file', 'error');
+                event.target.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                currentImageBase64 = e.target.result;
+                document.getElementById('previewImg').src = currentImageBase64;
+                document.getElementById('imagePreview').classList.add('show');
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function clearImagePreview() {
+            document.getElementById('productImage').value = '';
+            document.getElementById('imagePreview').classList.remove('show');
+            currentImageBase64 = null;
+        }
+        
+        document.getElementById('addProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const product = {
+                id: Date.now(),
+                name: document.getElementById('productName').value.trim(),
+                description: document.getElementById('productDescription').value.trim(),
+                imageBase64: currentImageBase64,
+                createdAt: new Date().toISOString()
+            };
+            
+            products.push(product);
+            localStorage.setItem('products', JSON.stringify(products));
+            
+            renderProducts();
+            closeAddProductModal();
+            showToast('Product added successfully!', 'success');
+        });
+        
+        // Send to TikTok
+        // Send to TikTok with security checks and decryption
+        async function sendToTikTok(index) {
+            const product = products[index];
+            
+            // Security check 1: Verify authentication
+            if (sessionStorage.getItem('user_logged_in') !== 'true') {
+                showToast('Please login first', 'error');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Security check 2: Verify security token
+            if (SECURITY_CONFIG.ENABLE_PROTECTION) {
+                const storedToken = sessionStorage.getItem('security_token');
+                if (!storedToken) {
+                    showToast('Security token missing. Please login again.', 'error');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                
+                // Check usage limit
+                const usageCount = parseInt(localStorage.getItem('app_usage_count') || '0');
+                if (usageCount >= SECURITY_CONFIG.MAX_USES) {
+                    showToast('⚠️ Maximum usage limit reached. This feature is disabled.', 'error');
+                    return;
+                }
+            }
+            
+            // Security check 3: Check API keys expiration
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                // Keys expired, remove them
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                showToast('⏰ Your API keys have expired. Please reconfigure them in Settings.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'settings.html';
+                }, 2000);
+                return;
+            }
+            
+            // Security check 4: Decrypt and verify API keys
+            const encryptedKey = sessionStorage.getItem('tiktok_client_key_encrypted');
+            const encryptedSecret = sessionStorage.getItem('tiktok_client_secret_encrypted');
+            
+            if (!encryptedKey || !encryptedSecret) {
+                showToast('Please configure TikTok API in Settings first', 'error');
+                setTimeout(() => {
+                    window.location.href = 'settings.html';
+                }, 2000);
+                return;
+            }
+            
+            // Decrypt API keys
+            const clientKey = await decryptAPIKey(encryptedKey);
+            const clientSecret = await decryptAPIKey(encryptedSecret);
+            
+            if (!clientKey || !clientSecret) {
+                showToast('Error decrypting API keys. Please reconfigure.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'settings.html';
+                }, 2000);
+                return;
+            }
+            
+            // Security check 5: Verify API keys are not default/forbidden
+            const isForbidden = SECURITY_CONFIG.FORBIDDEN_KEYS.some(key => 
+                clientKey.toLowerCase().includes(key.toLowerCase()) || 
+                clientSecret.toLowerCase().includes(key.toLowerCase())
+            );
+            
+            if (isForbidden) {
+                showToast('⚠️ Invalid API keys detected. Please use your own TikTok API credentials.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'settings.html';
+                }, 2000);
+                return;
+            }
+            
+            // Security check 6: Confirm action (important for production)
+            const confirmed = confirm(
+                '⚠️ SECURITY WARNING:\n\n' +
+                'You are about to send content to TikTok using YOUR API credentials.\n\n' +
+                'Make sure you are using YOUR OWN TikTok API keys.\n' +
+                'Do not use someone else\'s credentials.\n\n' +
+                'Continue?'
+            );
+            
+            if (!confirmed) {
+                return;
+            }
+            
+            // Disable button
+            const btn = document.getElementById(`sendBtn-${index}`);
+            btn.disabled = true;
+            btn.innerHTML = '<span>Uploading...</span>';
+            
+            // Show loading
+            document.getElementById('loadingOverlay').classList.add('active');
+            
+            // Simulate upload (in production, this would make a real API call with decrypted keys)
+            // NOTE: In production, send clientKey and clientSecret to your backend
+            // Never send encrypted keys directly to TikTok API
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+                btn.disabled = false;
+                btn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .58.05.86.14V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 4 15.68a6.33 6.33 0 0 0 10.86 4.43V13.23a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                    </svg>
+                    Send to TikTok
+                `;
+                showToast(`"${product.name}" sent to TikTok successfully!`, 'success');
+            }, 2000);
+        }
+        
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Close modal on outside click
+        document.getElementById('addProductModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddProductModal();
+            }
+        });
+        
+        // Delete Product Image
+        function deleteProductImage(index) {
+            if (confirm('Are you sure you want to delete this image?')) {
+                products[index].imageBase64 = null;
+                localStorage.setItem('products', JSON.stringify(products));
+                renderProducts();
+                showToast('Image deleted successfully', 'success');
+            }
+        }
+        
+        // Delete Product
+        function deleteProduct(index) {
+            const product = products[index];
+            if (confirm(`Are you sure you want to delete "${product.name}"?`)) {
+                products.splice(index, 1);
+                localStorage.setItem('products', JSON.stringify(products));
+                renderProducts();
+                showToast('Product deleted successfully', 'success');
+            }
+        }
+        
+        function logout() {
+            sessionStorage.clear();
+            localStorage.clear();
+        }
+        
+        // Initialize
+        (async () => {
+            await checkAPIConfig();
+            renderProducts();
+            checkExpirationWarnings();
+            
+            // Check expiration every 5 minutes
+            setInterval(() => {
+                cleanExpiredData();
+                checkExpirationWarnings();
+                checkAPIConfig();
+            }, 5 * 60 * 1000); // 5 minutes
+        })();
+    </script>
+</body>
+</html>
