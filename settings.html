@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - TikTok API Configuration | SaaS Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
+            min-height: 100vh;
+        }
+        .header {
+            background: white;
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-link {
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: #667eea;
+        }
+        .nav-link.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+        .main {
+            padding: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 8px;
+        }
+        .section-subtitle {
+            color: #64748b;
+            font-size: 14px;
+        }
+        .settings-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        .settings-section {
+            margin-bottom: 32px;
+        }
+        .settings-section:last-child {
+            margin-bottom: 0;
+        }
+        .settings-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'JetBrains Mono', monospace;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .form-help {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 6px;
+        }
+        .encrypted-display {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .encrypted-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: #64748b;
+            letter-spacing: 1px;
+        }
+        .encrypted-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #10b981;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        .success-message {
+            display: none;
+            background: #ecfdf5;
+            color: #059669;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .info-box {
+            background: #f0f3ff;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+        .info-box-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .info-box-text {
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">SaaS Pro</div>
+        <div class="nav-links">
+            <a href="dashboard.html" class="nav-link">Dashboard</a>
+            <a href="settings.html" class="nav-link active">Settings</a>
+            <a href="index.html" class="nav-link" onclick="logout()">Logout</a>
+        </div>
+    </div>
+    
+    <div class="main">
+        <div class="page-header">
+            <h1 class="section-title">Settings</h1>
+            <p class="section-subtitle">Configure your TikTok API credentials</p>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            ✓ Settings saved successfully!
+        </div>
+        
+        <div class="settings-card">
+            <div class="info-box">
+                <div class="info-box-title">🔒 Security Information</div>
+                <div class="info-box-text">
+                    Your API credentials are encrypted and stored securely in your browser's session storage. 
+                    They are never sent to external servers and are cleared when you close your browser.
+                </div>
+            </div>
+            
+            <form id="settingsForm">
+                <div class="settings-section">
+                    <h3 class="settings-section-title">TikTok API Configuration</h3>
+                    
+                    <!-- Security Warning -->
+                    <div style="background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; margin-bottom: 24px;">
+                        <div style="display: flex; align-items: start; gap: 12px;">
+                            <div style="font-size: 24px;">⚠️</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #92400e; margin-bottom: 8px; font-size: 14px;">
+                                    SECURITY WARNING
+                                </div>
+                                <div style="color: #78350f; font-size: 13px; line-height: 1.6;">
+                                    <strong>IMPORTANT:</strong> Only use YOUR OWN TikTok API credentials.<br>
+                                    • Never share your API keys with anyone<br>
+                                    • Never use someone else's API keys<br>
+                                    • Your keys will be <strong>encrypted</strong> and stored locally in your browser only<br>
+                                    • Anyone using this app with YOUR keys can post to YOUR TikTok account<br>
+                                    <strong style="color: #dc2626;">Use at your own risk.</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="clientKey">TikTok Client Key</label>
+                        <input 
+                            type="text" 
+                            id="clientKey" 
+                            class="form-input" 
+                            placeholder="awXXXXXXXXXXX"
+                        >
+                        <div class="form-help">Get your Client Key from TikTok Developer Portal</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="clientSecret">TikTok Client Secret</label>
+                        <input 
+                            type="password" 
+                            id="clientSecret" 
+                            class="form-input" 
+                            placeholder="Enter your Client Secret"
+                        >
+                        <div class="form-help">Your secret will be <strong>encrypted with AES-256-GCM</strong> and stored locally</div>
+                    </div>
+                    
+                    <div id="encryptedDisplay" style="display: none;">
+                        <label class="form-label">Encrypted Credentials</label>
+                        <div class="encrypted-display">
+                            <div>
+                                <div class="encrypted-value" id="encryptedKey">••••••••••••••••</div>
+                                <div class="encrypted-value" id="encryptedSecret" style="margin-top: 8px;">••••••••••••••••</div>
+                            </div>
+                            <div class="encrypted-status">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/>
+                                </svg>
+                                Encrypted
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-save">Save Settings</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Security Configuration
+        const SECURITY_CONFIG = {
+            UNIQUE_TOKEN: 'CHANGEZ_MOI_AVANT_DEPLOIEMENT_' + Date.now(),
+            MAX_USES: 999, // Augmenté pour permettre les tests
+            ENABLE_PROTECTION: true,
+            FORBIDDEN_KEYS: ['demo_key', 'test_key', 'example_key', 'your_key_here'],
+            // Durée d'expiration en millisecondes (24 heures)
+            EXPIRATION_HOURS: 24,
+            EXPIRATION_MS: 24 * 60 * 60 * 1000
+        };
+        
+        // Utility functions for expiration management
+        function getExpirationTimestamp() {
+            return Date.now() + SECURITY_CONFIG.EXPIRATION_MS;
+        }
+        
+        function isExpired(expirationTimestamp) {
+            if (!expirationTimestamp) return true;
+            return Date.now() > expirationTimestamp;
+        }
+        
+        function getTimeUntilExpiration(expirationTimestamp) {
+            if (!expirationTimestamp) return null;
+            const remaining = expirationTimestamp - Date.now();
+            if (remaining <= 0) return null;
+            return remaining;
+        }
+        
+        function formatTimeRemaining(ms) {
+            if (!ms || ms <= 0) return 'Expiré';
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}m`;
+        }
+        
+        // Clean expired data
+        function cleanExpiredData() {
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                console.log('🔒 Expired API keys removed');
+                return true;
+            }
+            return false;
+        }
+        
+        // Check and display expiration status
+        function checkExpirationStatus() {
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (!keyExpiration) return;
+            
+            const expiration = parseInt(keyExpiration);
+            if (isExpired(expiration)) {
+                // Keys expired
+                const warning = document.createElement('div');
+                warning.style.cssText = 'background: #fee2e2; border: 2px solid #dc2626; border-radius: 12px; padding: 16px; margin-bottom: 24px;';
+                warning.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 24px;">⏰</div>
+                        <div>
+                            <div style="font-weight: 600; color: #dc2626; margin-bottom: 4px;">API Keys Expired</div>
+                            <div style="color: #991b1b; font-size: 13px;">Your API keys have expired. Please reconfigure them.</div>
+                        </div>
+                    </div>
+                `;
+                const form = document.getElementById('settingsForm');
+                form.parentNode.insertBefore(warning, form);
+                cleanExpiredData();
+            } else {
+                // Show time remaining
+                const remaining = getTimeUntilExpiration(expiration);
+                if (remaining) {
+                    const timeRemaining = formatTimeRemaining(remaining);
+                    const hoursRemaining = Math.floor(remaining / (1000 * 60 * 60));
+                    
+                    // Show warning if less than 2 hours remaining
+                    if (hoursRemaining < 2) {
+                        const warning = document.createElement('div');
+                        warning.style.cssText = 'background: #fef3c7; border: 2px solid #f59e0b; border-radius: 12px; padding: 16px; margin-bottom: 24px;';
+                        warning.innerHTML = `
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="font-size: 24px;">⏰</div>
+                                <div>
+                                    <div style="font-weight: 600; color: #92400e; margin-bottom: 4px;">API Keys Expiring Soon</div>
+                                    <div style="color: #78350f; font-size: 13px;">Your API keys will expire in <strong>${timeRemaining}</strong>. They will be automatically removed after expiration.</div>
+                                </div>
+                            </div>
+                        `;
+                        const form = document.getElementById('settingsForm');
+                        form.parentNode.insertBefore(warning, form);
+                    }
+                }
+            }
+        }
+        
+        // Check authentication
+        if (sessionStorage.getItem('user_logged_in') !== 'true') {
+            window.location.href = 'index.html';
+        }
+        
+        // Encryption/Decryption utilities using Web Crypto API
+        async function getEncryptionKey() {
+            // Generate a key from user's session token + a fixed salt
+            const salt = 'TikTok_API_Encryption_Salt_2024';
+            const token = sessionStorage.getItem('security_token') || 'default';
+            const keyMaterial = await crypto.subtle.importKey(
+                'raw',
+                new TextEncoder().encode(token + salt),
+                { name: 'PBKDF2' },
+                false,
+                ['deriveBits', 'deriveKey']
+            );
+            
+            return await crypto.subtle.deriveKey(
+                {
+                    name: 'PBKDF2',
+                    salt: new TextEncoder().encode(salt),
+                    iterations: 100000,
+                    hash: 'SHA-256'
+                },
+                keyMaterial,
+                { name: 'AES-GCM', length: 256 },
+                false,
+                ['encrypt', 'decrypt']
+            );
+        }
+        
+        async function encryptAPIKey(text) {
+            if (!text) return null;
+            try {
+                const key = await getEncryptionKey();
+                const iv = crypto.getRandomValues(new Uint8Array(12));
+                const encoded = new TextEncoder().encode(text);
+                const encrypted = await crypto.subtle.encrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encoded
+                );
+                // Store IV + encrypted data as base64
+                const combined = new Uint8Array(iv.length + encrypted.byteLength);
+                combined.set(iv, 0);
+                combined.set(new Uint8Array(encrypted), iv.length);
+                return btoa(String.fromCharCode(...combined));
+            } catch (error) {
+                console.error('Encryption error:', error);
+                alert('Error encrypting API key. Please try again.');
+                return null;
+            }
+        }
+        
+        async function decryptAPIKey(encryptedData) {
+            if (!encryptedData) return null;
+            try {
+                const key = await getEncryptionKey();
+                const combined = Uint8Array.from(atob(encryptedData), c => c.charCodeAt(0));
+                const iv = combined.slice(0, 12);
+                const encrypted = combined.slice(12);
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: 'AES-GCM', iv: iv },
+                    key,
+                    encrypted
+                );
+                return new TextDecoder().decode(decrypted);
+            } catch (error) {
+                console.error('Decryption error:', error);
+                return null;
+            }
+        }
+        
+        // Load saved settings (decrypt if encrypted and not expired)
+        async function loadSettings() {
+            // Clean expired data first
+            const wasExpired = cleanExpiredData();
+            
+            if (wasExpired) {
+                // Keys were expired and removed, show message
+                alert('⏰ Your API keys have expired and have been removed. Please reconfigure them.');
+            }
+            
+            const encryptedKey = sessionStorage.getItem('tiktok_client_key_encrypted');
+            const encryptedSecret = sessionStorage.getItem('tiktok_client_secret_encrypted');
+            
+            // Check expiration before loading
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                // Keys expired, remove them
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                return;
+            }
+            
+            // Try to decrypt if encrypted and not expired
+            if (encryptedKey && encryptedSecret) {
+                const clientKey = await decryptAPIKey(encryptedKey);
+                const clientSecret = await decryptAPIKey(encryptedSecret);
+                
+                if (clientKey && clientSecret) {
+                    // Don't show decrypted values in input fields for security
+                    // Just show encrypted display
+                    await updateEncryptedDisplay();
+                    // Check and display expiration status
+                    checkExpirationStatus();
+                }
+            }
+            
+            // Legacy support: check for unencrypted keys (migrate them)
+            const legacyKey = sessionStorage.getItem('tiktok_client_key');
+            const legacySecret = sessionStorage.getItem('tiktok_client_secret');
+            
+            if (legacyKey && legacySecret && !encryptedKey) {
+                // Migrate to encrypted storage with expiration
+                const encryptedKeyNew = await encryptAPIKey(legacyKey);
+                const encryptedSecretNew = await encryptAPIKey(legacySecret);
+                
+                if (encryptedKeyNew && encryptedSecretNew) {
+                    const expiration = getExpirationTimestamp();
+                    sessionStorage.setItem('tiktok_client_key_encrypted', encryptedKeyNew);
+                    sessionStorage.setItem('tiktok_client_secret_encrypted', encryptedSecretNew);
+                    localStorage.setItem('tiktok_keys_expiration', expiration.toString());
+                    localStorage.setItem('tiktok_keys_created_at', Date.now().toString());
+                    sessionStorage.removeItem('tiktok_client_key');
+                    sessionStorage.removeItem('tiktok_client_secret');
+                    await updateEncryptedDisplay();
+                    checkExpirationStatus();
+                }
+            }
+        }
+        
+        // Display encrypted values (masked)
+        function encryptForDisplay(value) {
+            if (!value) return '';
+            // Show first 4 and last 4 characters, mask the rest
+            if (value.length <= 8) {
+                return '•'.repeat(value.length);
+            }
+            return value.substring(0, 4) + '•'.repeat(value.length - 8) + value.substring(value.length - 4);
+        }
+        
+        async function updateEncryptedDisplay() {
+            const encryptedKey = sessionStorage.getItem('tiktok_client_key_encrypted');
+            const encryptedSecret = sessionStorage.getItem('tiktok_client_secret_encrypted');
+            
+            if (encryptedKey && encryptedSecret) {
+                // Decrypt to show masked version
+                const clientKey = await decryptAPIKey(encryptedKey);
+                const clientSecret = await decryptAPIKey(encryptedSecret);
+                
+                if (clientKey && clientSecret) {
+                    document.getElementById('encryptedKey').textContent = encryptForDisplay(clientKey);
+                    document.getElementById('encryptedSecret').textContent = encryptForDisplay(clientSecret);
+                    document.getElementById('encryptedDisplay').style.display = 'block';
+                }
+            }
+        }
+        
+        // Handle form submission with encryption
+        document.getElementById('settingsForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const clientKey = document.getElementById('clientKey').value.trim();
+            const clientSecret = document.getElementById('clientSecret').value.trim();
+            
+            if (!clientKey || !clientSecret) {
+                alert('Please fill in both fields');
+                return;
+            }
+            
+            // Security check: Verify keys are not forbidden
+            const isForbidden = SECURITY_CONFIG.FORBIDDEN_KEYS.some(key => 
+                clientKey.toLowerCase().includes(key.toLowerCase()) || 
+                clientSecret.toLowerCase().includes(key.toLowerCase())
+            );
+            
+            if (isForbidden) {
+                alert('⚠️ Invalid API keys detected. Please use your own TikTok API credentials.');
+                return;
+            }
+            
+            // Encrypt and save to sessionStorage
+            const encryptedKey = await encryptAPIKey(clientKey);
+            const encryptedSecret = await encryptAPIKey(clientSecret);
+            
+            if (!encryptedKey || !encryptedSecret) {
+                alert('Error encrypting credentials. Please try again.');
+                return;
+            }
+            
+            // Store encrypted values with expiration (24 hours)
+            const expiration = getExpirationTimestamp();
+            sessionStorage.setItem('tiktok_client_key_encrypted', encryptedKey);
+            sessionStorage.setItem('tiktok_client_secret_encrypted', encryptedSecret);
+            localStorage.setItem('tiktok_keys_expiration', expiration.toString());
+            localStorage.setItem('tiktok_keys_created_at', Date.now().toString());
+            
+            // Remove any legacy unencrypted values
+            sessionStorage.removeItem('tiktok_client_key');
+            sessionStorage.removeItem('tiktok_client_secret');
+            
+            // Update encrypted display
+            await updateEncryptedDisplay();
+            
+            // Check and display expiration status
+            checkExpirationStatus();
+            
+            // Show success message with expiration info
+            const expirationDate = new Date(expiration);
+            const successMsg = document.getElementById('successMessage');
+            if (successMsg) {
+                successMsg.textContent = `✅ API credentials encrypted and saved successfully! They will expire in 24 hours (${expirationDate.toLocaleString()}).`;
+                successMsg.classList.add('show');
+                setTimeout(() => {
+                    successMsg.classList.remove('show');
+                }, 5000);
+            } else {
+                alert(`✅ API credentials encrypted and saved successfully!\n\nThey will expire in 24 hours (${expirationDate.toLocaleString()}).`);
+            }
+            
+            // Clear input fields for security
+            document.getElementById('clientKey').value = '';
+            document.getElementById('clientSecret').value = '';
+        });
+        
+        function logout() {
+            sessionStorage.clear();
+            localStorage.removeItem('app_usage_count');
+            localStorage.removeItem('app_unique_token');
+        }
+        
+        // Initialize
+        loadSettings();
+    </script>
+</body>
+</html>
+

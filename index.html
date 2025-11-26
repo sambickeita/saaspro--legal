@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS Pro - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+            padding: 60px 50px;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+        }
+        .logo {
+            font-size: 48px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 40px;
+            font-weight: 400;
+        }
+        .form-container {
+            text-align: left;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 13px;
+            color: #94a3b8;
+        }
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .error-message {
+            display: none;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">SaaS Pro</div>
+        <p class="subtitle">Professional Content Management Platform</p>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm" class="form-container">
+            <div class="form-group">
+                <label class="form-label" for="username">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="form-input" 
+                    placeholder="Enter your username"
+                    required
+                    autocomplete="username"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="form-input" 
+                    placeholder="Enter your password"
+                    required
+                    autocomplete="current-password"
+                >
+            </div>
+            
+            <button type="submit" class="btn-primary">
+                Sign In
+            </button>
+        </form>
+        
+        <div class="footer">
+            <a href="privacy.html">Privacy Policy</a> | 
+            <a href="terms.html">Terms of Service</a>
+        </div>
+    </div>
+
+    <script>
+        // Security Configuration
+        // CHANGEZ CES VALEURS pour votre utilisation unique
+        const SECURITY_CONFIG = {
+            // Token unique pour une utilisation unique (changez cette valeur)
+            UNIQUE_TOKEN: 'CHANGEZ_MOI_AVANT_DEPLOIEMENT_' + Date.now(),
+            // Nombre maximum d'utilisations autorisées (999 = presque illimité pour tests)
+            MAX_USES: 999,
+            // Activer la protection anti-abus
+            ENABLE_PROTECTION: true,
+            // Durée d'expiration en millisecondes (24 heures)
+            EXPIRATION_HOURS: 24,
+            EXPIRATION_MS: 24 * 60 * 60 * 1000
+        };
+        
+        // Utility functions for expiration management
+        function getExpirationTimestamp() {
+            return Date.now() + SECURITY_CONFIG.EXPIRATION_MS;
+        }
+        
+        function isExpired(expirationTimestamp) {
+            if (!expirationTimestamp) return true;
+            return Date.now() > expirationTimestamp;
+        }
+        
+        function getTimeUntilExpiration(expirationTimestamp) {
+            if (!expirationTimestamp) return null;
+            const remaining = expirationTimestamp - Date.now();
+            if (remaining <= 0) return null;
+            return remaining;
+        }
+        
+        function formatTimeRemaining(ms) {
+            if (!ms || ms <= 0) return 'Expiré';
+            const hours = Math.floor(ms / (1000 * 60 * 60));
+            const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+            if (hours > 0) {
+                return `${hours}h ${minutes}m`;
+            }
+            return `${minutes}m`;
+        }
+        
+        // Clean expired data on page load
+        function cleanExpiredData() {
+            // Check API keys expiration
+            const keyExpiration = localStorage.getItem('tiktok_keys_expiration');
+            if (keyExpiration && isExpired(parseInt(keyExpiration))) {
+                // Remove expired API keys
+                sessionStorage.removeItem('tiktok_client_key_encrypted');
+                sessionStorage.removeItem('tiktok_client_secret_encrypted');
+                localStorage.removeItem('tiktok_keys_expiration');
+                localStorage.removeItem('tiktok_keys_created_at');
+                console.log('🔒 Expired API keys removed');
+            }
+            
+            // Check session expiration
+            const sessionExpiration = sessionStorage.getItem('session_expiration');
+            if (sessionExpiration && isExpired(parseInt(sessionExpiration))) {
+                // Clear session
+                sessionStorage.clear();
+                console.log('🔒 Expired session cleared');
+            }
+        }
+        
+        // Simple authentication (for demo purposes)
+        // In production, this would connect to a backend API
+        
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                showError('Please fill in all fields');
+                return;
+            }
+            
+            // Validate credentials
+            const validUsername = 'dominator';
+            const validPassword = 'dominator123';
+            
+            if (username !== validUsername || password !== validPassword) {
+                showError('Invalid username or password');
+                return;
+            }
+            
+            // Security check: Single-use protection
+            if (SECURITY_CONFIG.ENABLE_PROTECTION) {
+                const usageCount = parseInt(localStorage.getItem('app_usage_count') || '0');
+                const lastToken = localStorage.getItem('app_unique_token');
+                
+                // Check if already used (only enforce strict single-use if MAX_USES <= 1)
+                if (SECURITY_CONFIG.MAX_USES <= 1 && usageCount >= SECURITY_CONFIG.MAX_USES && lastToken === SECURITY_CONFIG.UNIQUE_TOKEN) {
+                    showError('⚠️ This application has reached its maximum usage limit. Please contact the administrator.');
+                    return;
+                }
+                
+                // Store usage
+                localStorage.setItem('app_usage_count', (usageCount + 1).toString());
+                localStorage.setItem('app_unique_token', SECURITY_CONFIG.UNIQUE_TOKEN);
+                localStorage.setItem('app_first_use', new Date().toISOString());
+            }
+            
+            // Store authentication with expiration (24 hours)
+            const sessionExpiration = getExpirationTimestamp();
+            sessionStorage.setItem('user_logged_in', 'true');
+            sessionStorage.setItem('username', username);
+            sessionStorage.setItem('security_token', SECURITY_CONFIG.UNIQUE_TOKEN);
+            sessionStorage.setItem('session_expiration', sessionExpiration.toString());
+            sessionStorage.setItem('session_created_at', Date.now().toString());
+            
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.textContent = message;
+            errorDiv.classList.add('show');
+            setTimeout(() => {
+                errorDiv.classList.remove('show');
+            }, 5000);
+        }
+        
+        // Clean expired data on page load
+        cleanExpiredData();
+        
+        // Check if already logged in (and not expired)
+        const sessionExpiration = sessionStorage.getItem('session_expiration');
+        if (sessionStorage.getItem('user_logged_in') === 'true') {
+            if (sessionExpiration && !isExpired(parseInt(sessionExpiration))) {
+                window.location.href = 'dashboard.html';
+            } else {
+                // Session expired, clear it
+                sessionStorage.clear();
+            }
+        }
+    </script>
+</body>
+</html>
